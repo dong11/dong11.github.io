@@ -80,15 +80,22 @@
 
 
 
-<meta name="description" content="不忘初心">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Rex的学习空间">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="一、Activity(活动)：    1、定义：实现应用程序的可视化用户界面。所有Activity都必须在manifest文件(清单文件)中用activity标签生命。任何未经声明的Activity系统都会视而不见，且不会运行。    2、作用：它上面可以显示一些控件也可以监听并处理用户的事件做出响应
+二、Activity的生命周期：    Activity类中定义了七个回调方法，覆盖了活动(ac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Activity详解">
+<meta property="og:url" content="http://yoursite.com/2016/05/16/Activity/index.html">
 <meta property="og:site_name" content="Rex的学习空间">
-<meta property="og:description" content="不忘初心">
+<meta property="og:description" content="一、Activity(活动)：    1、定义：实现应用程序的可视化用户界面。所有Activity都必须在manifest文件(清单文件)中用activity标签生命。任何未经声明的Activity系统都会视而不见，且不会运行。    2、作用：它上面可以显示一些控件也可以监听并处理用户的事件做出响应
+二、Activity的生命周期：    Activity类中定义了七个回调方法，覆盖了活动(ac">
+<meta property="og:image" content="http://img.blog.csdn.net/20151108214534541">
+<meta property="og:image" content="http://img.blog.csdn.net/20151108221025493">
+<meta property="og:updated_time" content="2016-05-16T14:55:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Rex的学习空间">
-<meta name="twitter:description" content="不忘初心">
+<meta name="twitter:title" content="Activity详解">
+<meta name="twitter:description" content="一、Activity(活动)：    1、定义：实现应用程序的可视化用户界面。所有Activity都必须在manifest文件(清单文件)中用activity标签生命。任何未经声明的Activity系统都会视而不见，且不会运行。    2、作用：它上面可以显示一些控件也可以监听并处理用户的事件做出响应
+二、Activity的生命周期：    Activity类中定义了七个回调方法，覆盖了活动(ac">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20151108214534541">
 
 
 
@@ -106,7 +113,7 @@
   };
 </script>
 
-  <title> Rex的学习空间 </title>
+  <title> Activity详解 | Rex的学习空间 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -127,9 +134,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -216,9 +221,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -238,10 +243,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/05/16/Activity/" itemprop="url">
-                  Activity详解
-                </a>
+                Activity详解
               
             
           </h1>
@@ -281,9 +283,7 @@
       
 
       
-        
-          
-            <p><strong>一、Activity(活动)：</strong><br>    1、定义：实现应用程序的可视化用户界面。所有Activity都必须在manifest文件(清单文件)中用activity标签生命。任何未经声明的Activity系统都会视而不见，且不会运行。<br>    2、作用：它上面可以显示一些控件也可以监听并处理用户的事件做出响应</p>
+        <p><strong>一、Activity(活动)：</strong><br>    1、定义：实现应用程序的可视化用户界面。所有Activity都必须在manifest文件(清单文件)中用activity标签生命。任何未经声明的Activity系统都会视而不见，且不会运行。<br>    2、作用：它上面可以显示一些控件也可以监听并处理用户的事件做出响应</p>
 <p><strong>二、Activity的生命周期：</strong><br>    Activity类中定义了七个回调方法，覆盖了活动(activity)生命周期的每一个环节(依次是：)<br>    1、onCreate():每个活动中都重写了这个方法，它会在activity第一次被创建的时候调用，因此，应该在这个方法里完成活动的初始化，比如：加载布局，绑定事件。<br>    2、onRestart():在活动由停止状态变为运行状态之前被调用，也就是说活动被重新启动。(注：活动本身就存在栈中，没有调用onCreate()方法)<br>    3、onStart():在活动由不可见变为可见的时候调用。<br>    4、onResume():在活动准备好和用户进行交互的时候调用，此时的活动一定位于返回栈的栈顶，并处于运行状态。调用该方法后，界面可以和用户进行交互。<br>    5、onPause():在系统准备去启动或恢复另一个activity的时候调用，通常会在这个方法中将一些消耗CPU的资源释放掉，以及保存一些相关数据，但是这个方法的执行速度一定要快，不然会影响到新的栈顶活动的使用。<br>    6、onStop：在活动完全不可视的时候调用，它和onPause()方法的主要区别在于：onPause失去了焦点(不可点击)，但仍处于可见的状态，而onStop()是失去焦点并处于不可见的状态，例如：启动的新活动是一个对话框的形式，就会执行onPuase(),而不会执行onStop()<br>    7、onDestroy():在活动被销毁之前调用，之后活动的状态将变为销毁状态。在该方法中释放资源。<br>    由上面的几个方法，我们对以下几种例子，来得出主界面调用了哪些方法：<br>    1)、打开主界面，后退键退出<br>        onCreate()-&gt;onStart()-&gt;onResume()-&gt;onPause()-&gt;onStop()-&gt;onDestroy()<br>        2)、打开主界面，进入第二个页面，再按返回键返回<br>        onCreate()-&gt;onStart()-&gt;onResume()-&gt;onPause()-&gt;onStop()-&gt;onRestart()-&gt;onStart()-&gt;onResume()<br>        官方给出的一张Activity的生命周期图：<br>        <img src="http://img.blog.csdn.net/20151108214534541" alt="这里写图片描述"><br>    七个生命周期的组合：<br>    onCreate、onStart、onResume：启动应用程序<br>    onPause、onStop:失去焦点<br>    onRestart、onStart、onResume:重新获得焦点<br>    onPause、onStop、onDestroy:退出应用程序</p>
 <p>定义生命周期的作用：<br>①当用户接一个电话或切换到另一个程序不会崩溃<br>②当用户后台运行程序时不会销毁有价值的系统资源<br>③当用户离开再返回你的应用时不会丢失用户的进程<br>④当手机屏幕进行横竖屏切换的时候不会崩溃或者丢掉用户的进程</p>
 <p><strong>三、任务和回退栈：</strong><br>(一)任务Task：<br>1、概念：一个任务(task)就是在执行某项工作时与用户进行交互的Activity集合。这些Activity按照被打开的顺序依次被安排在一个堆栈中(回退栈)。<br>2、主屏页面：<br>设备的主屏是大多数任务的启动位置，当用户触摸一个应用程序启动器图标(或者app快捷图标)，应用程序的任务就会在前台显示。如果相关应用程序的任务不存在，那么就会有一个新的任务被创建，并且应用程序打开的”主”Activity会作为任务中的根Activity。<br>(二)、回退栈：<br>1、概念：在当前的Activity启动了另一个Activity时，这个新的Activity被放到了堆栈的顶部，并且带有焦点。前一个Activity并没有消失，而是保存在<br>回退栈中，此时它处于停止状态。<br>    当用户按下回退按钮时，当前的Activity会被从回退栈的顶部弹出(这个Activity被销毁)，而前一个Activity被恢复。堆栈中的Activity不会被重新排列。因此，回退栈的操作跟后进先出的对象结构是一样的<br>    在用户按下回退按钮的时，当前的Activity被销毁，并且前一个Activity被恢复。如果用户继续按回退键，那么回退栈中的每个Activity会被一次弹出，前一个Activity会被显示，直到用户返回主屏(或者返回到任务开始时运行的那个Activity)。当所有的Activity从回退栈中被删除时，这个任务就不再存在。<br>    图：<br>    <img src="http://img.blog.csdn.net/20151108221025493" alt="这里写图片描述"><br>    注意：后台中可以拥有多个任务，但是如果用户同时运行了很多后台任务，系统为了回收内存可能销毁一些后台的Activity，从而导致Activity的状态丢失。</p>
@@ -292,16 +292,18 @@
 <p><strong>2、异常情况下保存临时数据的方法：</strong><br>在onSaveInstanceState()方法中保存数据<br>//读取数据的方法<br>方法1:onRestoreInstanceState()，该方法执行在onStart()方法之后<br>方法2:在onCreate方法中的入参，就是保存的数据，直接从中取出数据<br>注意：取出数据之前，一定要判断是否为空。</p>
 <p><strong>3、横竖屏切换的问题：</strong><br>竖屏—&gt;横屏：先杀死一个Activity，再创建一个Activity<br>横屏—&gt;竖屏：先杀死一个Activity，再创建一个Activity<br>            再杀死一个Activity，再创建一个Activity<br>        原因：android的键盘导致的<br>可以设置清单文件中：<br>android:configChanges=”keyboardHidden|orientation|screenSize”<br>来保证横竖屏切换的时候，不改变Activity的生命周期<br>当横竖屏切换的时候，会触发：<br>public void onConfigurationChanged(Configuration newConfig);<br>横竖屏切换的时候可以在这个方法中做一些任务</p>
 
-          
-        
       
     </div>
     
     <div>
       
+        
+      
     </div>
 
     <div>
+      
+        
       
     </div>
 
@@ -309,113 +311,32 @@
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/04/27/FirstNight/" rel="next" title="First Night">
+                <i class="fa fa-chevron-left"></i> First Night
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/2016/04/27/FirstNight/" itemprop="url">
-                  First Night
-                </a>
-              
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-27T13:36:33+08:00" content="2016-04-27">
-              2016-04-27
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <pre><code>我有一头**小毛驴**，可是我从来都不骑。
-</code></pre>
-          
-        
-      
-    </div>
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -423,6 +344,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -442,8 +367,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -479,6 +413,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -575,6 +520,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
