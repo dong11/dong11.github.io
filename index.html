@@ -171,16 +171,6 @@
         </li>
       
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
@@ -291,6 +281,225 @@
 <p><strong>五、Activity常见问题：</strong><br><strong>1、Activity返回时，如何返回数据？</strong><br>(1)、在Activity1中用startActivityForResult()来启动另一个Activity2，<br>        在Activity1中复写onActivityResult()方法，回调拿到返回的数据<br>(2)、在Activity2中利用setResult()方法返回数据给Activity1</p>
 <p><strong>2、异常情况下保存临时数据的方法：</strong><br>在onSaveInstanceState()方法中保存数据<br>//读取数据的方法<br>方法1:onRestoreInstanceState()，该方法执行在onStart()方法之后<br>方法2:在onCreate方法中的入参，就是保存的数据，直接从中取出数据<br>注意：取出数据之前，一定要判断是否为空。</p>
 <p><strong>3、横竖屏切换的问题：</strong><br>竖屏—&gt;横屏：先杀死一个Activity，再创建一个Activity<br>横屏—&gt;竖屏：先杀死一个Activity，再创建一个Activity<br>            再杀死一个Activity，再创建一个Activity<br>        原因：android的键盘导致的<br>可以设置清单文件中：<br>android:configChanges=”keyboardHidden|orientation|screenSize”<br>来保证横竖屏切换的时候，不改变Activity的生命周期<br>当横竖屏切换的时候，会触发：<br>public void onConfigurationChanged(Configuration newConfig);<br>横竖屏切换的时候可以在这个方法中做一些任务</p>
+
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/16/Context/" itemprop="url">
+                  Context详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-16T22:51:20+08:00" content="2016-05-16">
+              2016-05-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>一、什么是Context？</strong><br>    源码注释：<br>    <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Interface to global information about an application environment.  This is</span><br><span class="line"> * an abstract class whose implementation is provided by</span><br><span class="line"> * the Android system.  It</span><br><span class="line"> * allows access to application-specific resources and classes, as well as</span><br><span class="line"> * up-calls for application-level operations such as launching activities,</span><br><span class="line"> * broadcasting and receiving intents, etc.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Context</span> </span>&#123;</span><br></pre></td></tr></table></figure></p>
+<p>从注释中可以看出：Context提供了关于应用环境全局信息的接口。它是一个抽象类，它的执行被Android系统所提供。它允许获取以应用为特征的资源和类型，是一个统领一些资源(应用程序环境变量等)的上下文。就是说，它描述一个应用程序环境的信息(即上下文)；是一个抽象类，Android提供了该抽象类的具体实现类；通过它我们可以获取应用程序的资源和类（包括应用级别操作，如启动Activity，发广播，接受Intent等）。既然上面Context是一个抽象类，那么肯定有他的实现类咯，我们在Context的源码中通过IDE可以查看到他的子类最终可以得到如下关系图：<br>    <img src="http://7xs09t.com1.z0.glb.clouddn.com/context.png"><br>    Context类本身是一个纯abstract类，它有两个具体的实现子类：ContextImpl和ContextWrapper。其中ContextWrapper类，如其名所言，这只是一个包装而已，ContextWrapper构造函数中必须包含一个真正的Context引用，同时ContextWrapper中提供了attachBaseContext（）用于给ContextWrapper对象中指定真正的Context对象，调用ContextWrapper的方法都会被转向其所包含的真正的Context对象。ContextThemeWrapper类，如其名所言，其内部包含了与主题（Theme）相关的接口，这里所说的主题就是指在AndroidManifest.xml中通过android：theme为Application元素或者Activity元素指定的主题。当然，只有Activity才需要主题，Service是不需要主题的，因为Service是没有界面的后台场景，所以Service直接继承于ContextWrapper，Application同理。而ContextImpl类则真正实现了Context中的所以函数，应用程序中所调用的各种Context类的方法，其实现均来自于该类。一句话总结：Context的两个子类分工明确，其中ContextImpl是Context的具体实现类，ContextWrapper是Context的包装类。Activity，Application，Service虽都继承自ContextWrapper（Activity继承自ContextWrapper的子类ContextThemeWrapper），但它们初始化的过程中都会创建ContextImpl对象，由ContextImpl实现Context中的方法。</p>
+<p><strong>二、一个应用程序有几个Context？</strong><br>    其实这个问题本身并没有什么意义，关键还是在于对Context的理解，从上面的关系图我们已经可以得出答案了，在应用程序中Context的具体实现子类就是：Activity，Service，Application。那么Context数量=Activity数量+Service数量+1。当然如果你足够细心，可能会有疑问：我们常说四大组件，这里怎么只有Activity，Service持有Context，那Broadcast Receiver，Content Provider呢？Broadcast Receiver，Content Provider并不是Context的子类，他们所持有的Context都是其他地方传过去的，所以并不计入Context总数。上面的关系图也从另外一个侧面告诉我们Context类在整个Android系统中的地位是多么的崇高，因为很显然Activity，Service，Application都是其子类，其地位和作用不言而喻。</p>
+<p><strong>三、Context能干什么？</strong><br>Context到底可以实现哪些功能呢？这个就实在是太多了，弹出Toast、启动Activity、启动Service、发送广播、操作数据库等等都需要用到Context。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TextView tv = <span class="keyword">new</span> TextView(getContext());</span><br><span class="line">ListAdapter adapter = <span class="keyword">new</span> SimpleCursorAdapter(getApplicationContext(), ...);</span><br><span class="line">AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);getApplicationContext().getSharedPreferences(name, mode);</span><br><span class="line">getApplicationContext().getContentResolver().query(uri, ...);</span><br><span class="line">getContext().getResources().getDisplayMetrics().widthPixels * <span class="number">5</span> / <span class="number">8</span>;</span><br><span class="line">getContext().startActivity(intent);</span><br><span class="line">getContext().startService(intent);</span><br><span class="line">getContext().sendBroadcast(intent);</span><br></pre></td></tr></table></figure></p>
+<p><strong>四、Context引起的内存泄露</strong><br>但Context并不能随便乱用，用的不好有可能会引起内存泄露的问题，下面就示例两种错误的引用方式。<br><strong>错误的单例模式</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line">    <span class="keyword">private</span> Context mContext;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mContext = context;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> Singleton(context);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这是一个非线程安全的单例模式，instance作为静态对象，其生命周期要长于普通的对象，其中也包含Activity，假如Activity A去getInstance获得instance对象，传入this，常驻内存的Singleton保存了你传入的Activity A对象，并一直持有，即使Activity被销毁掉，但因为它的引用还存在于一个Singleton中，就不可能被GC掉，这样就导致了内存泄漏。</p>
+<p><strong>View持有Activity引用</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Drawable mDrawable;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle saveInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(saveInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        ImageView iv = <span class="keyword">new</span> ImageView(<span class="keyword">this</span>);</span><br><span class="line">        mDrawable = getResources().getDrawable(R.drawable.ic_launcher);</span><br><span class="line">        iv.setImageDrawable(mDrawable);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有一个静态的Drawable对象当ImageView设置这个Drawable时，ImageView保存了mDrawable的引用，而ImageView传入的this是MainActivity的mContext，因为被static修饰的mDrawable是常驻内存的，MainActivity是它的间接引用，MainActivity被销毁时，也不能被GC掉，所以造成内存泄漏。</p>
+<p><strong>正确使用Context</strong><br>一般Context造成的内存泄漏，几乎都是当Context销毁的时候，却因为被引用导致销毁失败，而Application的Context对象可以理解为随着进程存在的，所以我们总结出使用Context的正确姿势：<br>1：当Application的Context能搞定的情况下，并且生命周期长的对象，优先使用Application的Context。<br>2：不要让生命周期长于Activity的对象持有到Activity的引用。<br>3：尽量不要在Activity中使用非静态内部类，因为非静态内部类会隐式持有外部类实例的引用，如果使用静态内部类，将外部实例引用作为弱引用持有。</p>
+<p>参考文章：<br>[<a href="http://www.jianshu.com/p/94e0f9ab3f1d" target="_blank" rel="external">http://www.jianshu.com/p/94e0f9ab3f1d</a>]<br>[<a href="http://blog.csdn.net/guolin_blog/article/details/47028975" target="_blank" rel="external">http://blog.csdn.net/guolin_blog/article/details/47028975</a>]<br>[<a href="http://blog.csdn.net/yanbober/article/details/45967639" target="_blank" rel="external">http://blog.csdn.net/yanbober/article/details/45967639</a>]</p>
+
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/16/Service/" itemprop="url">
+                  Service详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-16T22:51:20+08:00" content="2016-05-16">
+              2016-05-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>一、Service 简介：</strong><br>     “Service” 意思即“服务”的意思， Service是Android中实现程序后台运行的解决方案，它适合用于执行不需要和用户交互而还要求长期运行的任务。Service运行在后台，它是不可见的、无界面的程序。Service的运行不依赖于任何用户界面，承担着静悄悄的不为人所注意的工作，即使当程序被切换到后台，或者用户打开了另外一个应用程序，服务仍然能够保持正常运行。<br>     但是，Service并不是运行在一个独立的进程当中的，而是依赖于创建服务时所在的应用程序进程。另外，不要被Service的后台概念所迷惑，Service不会自动开启线程，所有的代码都默认运行在主线程当中。使用Service时，如果担心主线程被阻塞，就需要在Service的内部手动创建一个子线程来执行任务。(服务不开启线程执行耗时操作也会产生ANR)<br>     Service可以在很多场合的应用中使用，比如播放多媒体的时候用户启动了其他Activity，这个时候程序要在后台继续播放；比如检测SD卡上文件的变化；再或者在后台记录用户的地理信息位置的改变；或者启动一个服务来运行并一直监听某种动作等等。</p>
+<pre><code>【备注】
+ 三大智能手机操作系统中，IOS是不支持后台的，当应用程序不在前台运行时就会进入到挂起状态。Android则沿用了Symbian的老习惯，加入了后台功能，这样应用程序即使在关闭的情况下仍然可在后台继续运行。Windows Phone则经历了由不支持后台到支持后台的过程。目前Windows Phone8系统也具备后台功能。
+</code></pre><p><strong>二、Service概念的总结：</strong></p>
+<blockquote>
+<ul>
+<li>Service在后台运行，不可以与用户直接交互；</li>
+<li>一个服务不是一个单独的进程。服务对象本身并不意味着它是在自己的进程中运行，除非另有规定，否则它与运行程序是同在一个进程中；</li>
+<li>一个服务不是一个单独的线程。Service和其他组件一样，默认情况下，Service中的所有代码都是运行在主线程中；</li>
+<li>Service存在的价值虽然不如Activity那么清晰。但是一般都让Service执行耗时较长的操作。例如：播放音乐、下载文件、上传文件等等。但是因为Service默认运行在主线程中，因此不能直接用它来做耗时的请求或者动作，最好在Service中启动新线程来运行耗时的任务；</li>
+<li>需要通过某一个Activity/BroadCastReceiver或其他Context对象来启动Service。context.startService() 或 context.bindService()；</li>
+<li>Service很大程度上充当了应用程序后台线程管理器的角色。（如果Activity中新开启一个线程，当该Acitivyt关闭后，该线程依然在工作，但是与开启它的Activity失去联系。也就是说此时的这个线程处于失去管理的状态。但是使用Service，则可以对后台运行的线程有效地管理）</li>
+<li>对于Activity来说，Service管理线程更为容易</li>
+</ul>
+</blockquote>
+<p><strong>三、为什么不使用后台线程而使用Service？</strong><br>1、Service可以放在独立的进程中，所以更安全；(不是默认的行为，要单独设置)<br>2、使用Service可以依赖现有的binder机制，不需要在应用层面上处理线程同步的繁杂工作；（比如远程服务数据传递）<br>3、系统可以重新启动异常死去的Service。(是不会影响用户的UI操作的)</p>
+<p><strong>四、Service 与 Activity 的相同点与不同点</strong></p>
+<blockquote>
+<ul>
+<li>不同点：Activity是与用户交互的组件，即可以看到UI界面，而Service是在后台运行、无需界面；</li>
+<li>相同点：使用Activity 时我们需要在配置文件中声明<activity>标签，同样的使用Service 也需要在配置文件中声明<service>标签。都具有一定的生命周期。</service></activity></li>
+</ul>
+</blockquote>
 
           
         
@@ -453,7 +662,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">4</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

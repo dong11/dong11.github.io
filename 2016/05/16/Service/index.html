@@ -80,16 +80,16 @@
 
 
 
-<meta name="description" content="我有一头小毛驴，可是我从来都不骑。         ——Rex刚搬到新家，还没适应怎么写，多折腾折腾几天再开始记录。">
+<meta name="description" content="一、Service 简介：     “Service” 意思即“服务”的意思， Service是Android中实现程序后台运行的解决方案，它适合用于执行不需要和用户交互而还要求长期运行的任务。Service运行在后台，它是不可见的、无界面的程序。Service的运行不依赖于任何用户界面，承担着静悄悄的不为人所注意的工作，即使当程序被切换到后台，或者用户打开了另外一个应用程序，服务仍然能够保持正常">
 <meta property="og:type" content="article">
-<meta property="og:title" content="First Night">
-<meta property="og:url" content="http://yoursite.com/2016/04/27/FirstNight/index.html">
+<meta property="og:title" content="Service详解">
+<meta property="og:url" content="http://yoursite.com/2016/05/16/Service/index.html">
 <meta property="og:site_name" content="Rex的学习空间">
-<meta property="og:description" content="我有一头小毛驴，可是我从来都不骑。         ——Rex刚搬到新家，还没适应怎么写，多折腾折腾几天再开始记录。">
-<meta property="og:updated_time" content="2016-05-16T15:23:28.000Z">
+<meta property="og:description" content="一、Service 简介：     “Service” 意思即“服务”的意思， Service是Android中实现程序后台运行的解决方案，它适合用于执行不需要和用户交互而还要求长期运行的任务。Service运行在后台，它是不可见的、无界面的程序。Service的运行不依赖于任何用户界面，承担着静悄悄的不为人所注意的工作，即使当程序被切换到后台，或者用户打开了另外一个应用程序，服务仍然能够保持正常">
+<meta property="og:updated_time" content="2016-05-18T15:11:24.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="First Night">
-<meta name="twitter:description" content="我有一头小毛驴，可是我从来都不骑。         ——Rex刚搬到新家，还没适应怎么写，多折腾折腾几天再开始记录。">
+<meta name="twitter:title" content="Service详解">
+<meta name="twitter:description" content="一、Service 简介：     “Service” 意思即“服务”的意思， Service是Android中实现程序后台运行的解决方案，它适合用于执行不需要和用户交互而还要求长期运行的任务。Service运行在后台，它是不可见的、无界面的程序。Service的运行不依赖于任何用户界面，承担着静悄悄的不为人所注意的工作，即使当程序被切换到后台，或者用户打开了另外一个应用程序，服务仍然能够保持正常">
 
 
 
@@ -107,7 +107,7 @@
   };
 </script>
 
-  <title> First Night | Rex的学习空间 </title>
+  <title> Service详解 | Rex的学习空间 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -227,7 +227,7 @@
             
             
               
-                First Night
+                Service详解
               
             
           </h1>
@@ -239,8 +239,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-27T13:36:33+08:00" content="2016-04-27">
-              2016-04-27
+            <time itemprop="dateCreated" datetime="2016-05-16T22:51:20+08:00" content="2016-05-16">
+              2016-05-16
             </time>
           </span>
 
@@ -267,7 +267,30 @@
       
 
       
-        <h3 id="我有一头小毛驴，可是我从来都不骑。-——Rex"><a href="#我有一头小毛驴，可是我从来都不骑。-——Rex" class="headerlink" title="我有一头小毛驴，可是我从来都不骑。         ——Rex"></a>我有一头<strong>小毛驴</strong>，可是我从来都不骑。         ——Rex</h3><h4 id="刚搬到新家，还没适应怎么写，多折腾折腾几天再开始记录。"><a href="#刚搬到新家，还没适应怎么写，多折腾折腾几天再开始记录。" class="headerlink" title="刚搬到新家，还没适应怎么写，多折腾折腾几天再开始记录。"></a>刚搬到新家，还没适应怎么写，多折腾折腾几天再开始记录。</h4>
+        <p><strong>一、Service 简介：</strong><br>     “Service” 意思即“服务”的意思， Service是Android中实现程序后台运行的解决方案，它适合用于执行不需要和用户交互而还要求长期运行的任务。Service运行在后台，它是不可见的、无界面的程序。Service的运行不依赖于任何用户界面，承担着静悄悄的不为人所注意的工作，即使当程序被切换到后台，或者用户打开了另外一个应用程序，服务仍然能够保持正常运行。<br>     但是，Service并不是运行在一个独立的进程当中的，而是依赖于创建服务时所在的应用程序进程。另外，不要被Service的后台概念所迷惑，Service不会自动开启线程，所有的代码都默认运行在主线程当中。使用Service时，如果担心主线程被阻塞，就需要在Service的内部手动创建一个子线程来执行任务。(服务不开启线程执行耗时操作也会产生ANR)<br>     Service可以在很多场合的应用中使用，比如播放多媒体的时候用户启动了其他Activity，这个时候程序要在后台继续播放；比如检测SD卡上文件的变化；再或者在后台记录用户的地理信息位置的改变；或者启动一个服务来运行并一直监听某种动作等等。</p>
+<pre><code>【备注】
+ 三大智能手机操作系统中，IOS是不支持后台的，当应用程序不在前台运行时就会进入到挂起状态。Android则沿用了Symbian的老习惯，加入了后台功能，这样应用程序即使在关闭的情况下仍然可在后台继续运行。Windows Phone则经历了由不支持后台到支持后台的过程。目前Windows Phone8系统也具备后台功能。
+</code></pre><p><strong>二、Service概念的总结：</strong></p>
+<blockquote>
+<ul>
+<li>Service在后台运行，不可以与用户直接交互；</li>
+<li>一个服务不是一个单独的进程。服务对象本身并不意味着它是在自己的进程中运行，除非另有规定，否则它与运行程序是同在一个进程中；</li>
+<li>一个服务不是一个单独的线程。Service和其他组件一样，默认情况下，Service中的所有代码都是运行在主线程中；</li>
+<li>Service存在的价值虽然不如Activity那么清晰。但是一般都让Service执行耗时较长的操作。例如：播放音乐、下载文件、上传文件等等。但是因为Service默认运行在主线程中，因此不能直接用它来做耗时的请求或者动作，最好在Service中启动新线程来运行耗时的任务；</li>
+<li>需要通过某一个Activity/BroadCastReceiver或其他Context对象来启动Service。context.startService() 或 context.bindService()；</li>
+<li>Service很大程度上充当了应用程序后台线程管理器的角色。（如果Activity中新开启一个线程，当该Acitivyt关闭后，该线程依然在工作，但是与开启它的Activity失去联系。也就是说此时的这个线程处于失去管理的状态。但是使用Service，则可以对后台运行的线程有效地管理）</li>
+<li>对于Activity来说，Service管理线程更为容易</li>
+</ul>
+</blockquote>
+<p><strong>三、为什么不使用后台线程而使用Service？</strong><br>1、Service可以放在独立的进程中，所以更安全；(不是默认的行为，要单独设置)<br>2、使用Service可以依赖现有的binder机制，不需要在应用层面上处理线程同步的繁杂工作；（比如远程服务数据传递）<br>3、系统可以重新启动异常死去的Service。(是不会影响用户的UI操作的)</p>
+<p><strong>四、Service 与 Activity 的相同点与不同点</strong></p>
+<blockquote>
+<ul>
+<li>不同点：Activity是与用户交互的组件，即可以看到UI界面，而Service是在后台运行、无需界面；</li>
+<li>相同点：使用Activity 时我们需要在配置文件中声明<activity>标签，同样的使用Service 也需要在配置文件中声明<service>标签。都具有一定的生命周期。</service></activity></li>
+</ul>
+</blockquote>
+
       
     </div>
     
@@ -290,12 +313,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/04/27/FirstNight/" rel="next" title="First Night">
+                <i class="fa fa-chevron-left"></i> First Night
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/05/16/Service/" rel="prev" title="Service详解">
-                Service详解 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/05/16/Context/" rel="prev" title="Context详解">
+                Context详解 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -396,7 +423,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#我有一头小毛驴，可是我从来都不骑。-——Rex"><span class="nav-number">1.</span> <span class="nav-text">我有一头小毛驴，可是我从来都不骑。         ——Rex</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#刚搬到新家，还没适应怎么写，多折腾折腾几天再开始记录。"><span class="nav-number">1.1.</span> <span class="nav-text">刚搬到新家，还没适应怎么写，多折腾折腾几天再开始记录。</span></a></li></ol></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
         </section>
