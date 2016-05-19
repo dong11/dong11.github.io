@@ -86,7 +86,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/05/16/Service/index.html">
 <meta property="og:site_name" content="Rex的学习空间">
 <meta property="og:description" content="一、Service 简介：     “Service” 意思即“服务”的意思， Service是Android中实现程序后台运行的解决方案，它适合用于执行不需要和用户交互而还要求长期运行的任务。Service运行在后台，它是不可见的、无界面的程序。Service的运行不依赖于任何用户界面，承担着静悄悄的不为人所注意的工作，即使当程序被切换到后台，或者用户打开了另外一个应用程序，服务仍然能够保持正常">
-<meta property="og:updated_time" content="2016-05-18T15:11:24.000Z">
+<meta property="og:updated_time" content="2016-05-19T14:12:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Service详解">
 <meta name="twitter:description" content="一、Service 简介：     “Service” 意思即“服务”的意思， Service是Android中实现程序后台运行的解决方案，它适合用于执行不需要和用户交互而还要求长期运行的任务。Service运行在后台，它是不可见的、无界面的程序。Service的运行不依赖于任何用户界面，承担着静悄悄的不为人所注意的工作，即使当程序被切换到后台，或者用户打开了另外一个应用程序，服务仍然能够保持正常">
@@ -288,6 +288,67 @@
 <ul>
 <li>不同点：Activity是与用户交互的组件，即可以看到UI界面，而Service是在后台运行、无需界面；</li>
 <li>相同点：使用Activity 时我们需要在配置文件中声明<activity>标签，同样的使用Service 也需要在配置文件中声明<service>标签。都具有一定的生命周期。</service></activity></li>
+</ul>
+</blockquote>
+<p><strong>五、服务的分类：</strong><br>1、本地服务Local Service：（开启的服务给本应用程序使用的）<br>Local Service 用于应用程序内部。用于实现应用程序自己的一些耗时任务，比如查询升级信息，并不占用应用程序比如Activity所属线程，而是单开线程后台执行，这样用户体验比较好。<br>启动service有两种方法：</p>
+<pre><code>1. Context.startService()
+                调用者与服务之间没有关联，即使调用者退出，服务仍可运行
+2. Context.bindService()
+                调用者与服务绑定在一起，调用者一旦退出，服务也就终止
+</code></pre><p>A、根据启动方式将本地服务分为：启动服务Started Service和绑定服务Bound Service。</p>
+<blockquote>
+<ul>
+<li>Started Service：被启动的服务<br>  被启动的服务是由其它组件调用startService()方法而启动的，该方法会导致被启动服务的生命周期方法onStartCommand()被回调。当服务是被启动状态后，其生命周期与启动它的组件无关，即使启动服务的组件（Activity，BroadcastReceiver）已经被销毁，该服务还可以在后台无限期运行。除非调用stopSelf()或stopService()来停止该服务。</li>
+<li>Bound  Service：被绑定的服务<br>  绑定服务是允许其它应用程序绑定并且与之交互的Service的实现类。为了提供绑定，必须实现onBind()回调方法。该方法返回IBinder对象(IBinder是接口)，它定义了服务类与Activity交互的程序接口。<br>Activity通过bindService()方法绑定到服务类，同时Activity必须提供ServiceConnection接口的实现类，它监视Activity与服务类之间的连接。在重写ServiceConnection接口的onServiceConnected()方法时，实现了将服务类顺利赋值到了Activity中，实现了在Activity中使用该服务类并执行其中的方法。</li>
+</ul>
+</blockquote>
+<p>B、根据onStartCommand()回调方法的返回值，将Service分为粘性Service和非粘性Service：<br>    onStartCommand()方法有三种返回值：(服务被异常kill掉是系统的行为，当内存缺乏的时候会kill掉服务)</p>
+<blockquote>
+<ul>
+<li><strong>START_STICKY（常量值：1）</strong>：sticky的意思是“粘性的”。使用这个返回值时，我们启动的服务跟应用程序”粘”在一起，如果在执行完onStartCommand后，服务被异常kill掉，系统会自动重启该服务。当再次启动服务时，传入的第一个参数将为null;</li>
+<li><strong>START_NOT_STICKY（常量值：2）</strong>：“非粘性的”。使用这个返回值时，如果在执行完onStartCommand后，服务被异常kill掉，系统不会自动重启该服务。</li>
+<li><strong>START_REDELIVER_INTENT（常量值：3）</strong>：具有“粘性的”，重传Intent。使用这个返回值时，如果在执行完onStartCommand后，服务被异常kill掉，系统会自动重启该服务，并将Intent的值传入。<br>【备注】<br>以上三种情况，可以理解为发生车祸后的人：<br>START_STICKY：（常量值：1）车祸后自己苏醒，但是失忆；<br>START_NOT_STICKY：（常量值：2）车祸后再也没有苏醒；<br>START_REDELIVER_INTENT：（常量值：3）车祸后自己苏醒，依然保持记忆。</li>
+</ul>
+</blockquote>
+<p>2、远程服务Remote Service：<br>Remote Service 用于android系统内部的应用程序之间。可以定义接口并把接口暴露出来，以便其他应用进行操作。可被其他应用程序复用，比如天气预报服务，其他应用程序不需要再写这样的服务，调用已有的即可。</p>
+<p><strong>六、Service的生命周期：</strong></p>
+<p><image src="http://7xs09t.com1.z0.glb.clouddn.com/service"><br>1、Started Service的生命周期：</image></p>
+<blockquote>
+<ul>
+<li>onCreate()：创建服务</li>
+<li>onStartCommand()：服务开始运行（在2.0以前版本中，使用onStart()回调方法）</li>
+<li>onDestroy() ：服务被停止<br>【详细说明：】</li>
+<li>在程序中调用：context.startService() 会触发执行Service生命周期中的onCreate()、onStartCommand()回调方法，此时服务就开始正式运行；</li>
+<li>如果Service还没有运行，则android先调用onCreate()然后调用onStartCommand()；如果Service已经运行，则只调用onStartCommand()，所以一个Service的onStartCommand方法可能会重复调用多次；</li>
+<li>如果在程序中调用：context.stopService()会触发执行Service生命周期中的onDestroy()回调方法，会让服务停止；</li>
+<li>stopService()的时候直接onDestroy，如果是调用者自己直接退出而没有调用stopService()的话，Service会一直在后台运行。该Service的调用者再启动该Service后可以通过stopService关闭Service；stopSelf()</li>
+<li>所以StartService的生命周期为：onCreate –&gt; onStartCommand(可多次调用) –&gt; onDestroy。</li>
+</ul>
+</blockquote>
+<p>2、Bound Service的生命周期：</p>
+<blockquote>
+<ul>
+<li>onCreate()：创建服务</li>
+<li>onBind()：绑定服务，服务开始运行</li>
+<li>onUnbind()：取消绑定</li>
+<li>onDestroy() ：服务被停止</li>
+</ul>
+</blockquote>
+<p>【详细说明：】</p>
+<blockquote>
+<ul>
+<li>在程序中调用：context.bindService()会触发执行Service生命周期中的onCreate()、onBind()回调方法，此时服务开始运行；</li>
+<li>onBind将返回给客户端一个IBind接口实例，IBind允许客户端回调服务的方法，比如得到Service运行的状态或其他操作。此后调用者（Context，例如Activity）会和Service绑定在一起；</li>
+<li>如果调用Service的调用者Context退出了，那么会依次调用Service生命周期中的onUnbind()、onDestroy()回调方法，会让服务停止；    </li>
+<li>所以BindService的生命周期为：onCreate –&gt; onBind(只一次，不可多次绑定) –&gt; onUnbind –&gt; onDestory。</li>
+</ul>
+</blockquote>
+<p> 【备注：】</p>
+<blockquote>
+<ul>
+<li>Service是不能自己启动的，只有通过 Context 对象调用startService() 和bindService() 方法来启动。</li>
+<li>在Service每一次的开启关闭过程中，只有onStartCommand()可被多次调用(通过多次startService调用)，其他onCreate()、onBind()、onUnbind()、onDestory()在一个生命周期中只能被调用一次。</li>
+<li>Service可以在和多场合的应用中使用，比如播放多媒体的时候用户启动了其他Activity这个时候程序要在后台继续播放，比如检测SD卡上文件的变化，再或者在后台记录你地理信息位置的改变等等，总之服务总是藏在后头的。</li>
 </ul>
 </blockquote>
 
