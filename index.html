@@ -229,6 +229,135 @@
             
               
                 
+                <a class="post-title-link" href="/2016/05/25/ContentProvider/" itemprop="url">
+                  ContentProvider详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-25T18:16:50+08:00" content="2016-05-25">
+              2016-05-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一、ContentProvider简介：<br>（一）、引入：<br>         数据库在Android当中是私有的，不能将数据库设为WORLD_READABLE,每个数据库都只能创建它的包访问。这意味着只有创建这个数据库的应用程序才可访问它。也就是说不能跨越进程和包的边界，直接访问别的应用程序的数据库。那么如何在应用程序间交换数据呢？ 如果需要在进程间传递数据，可以使用ContentProvider来实现。</p>
+<p>（二）、ContentProvider的功能和意义：<br>        为了在应用程序之间交换数据，Android提供了ContentProvider，ContentProvider是不同应用程序之间进行数据交换的标准API。当一个应用程序需要把自己的数据暴露给其他应用程序使用时，该应用程序可以通过提供ContentProvider来实现；而其他应用程序需要使用这些数据时，可以通过ContentResolver来操作ContentProvider暴露的数据。<br>        一旦某个应用程序通过ContentProvider暴露了自己的数据操作接口，那么不管该应用程序是否启动，其他应用程序都可以通过该接口来操作被暴露的内部数据，包括增加数据、删除数据、修改数据、查询数据等。<br>        虽然大部分使用ContentProvider操作的数据都来自于数据库，但是也可以来自于文件、SharedPreferences、XML或网络等其他存储方式。</p>
+<p>（三）、核心类：<br>    1、ContentProvider：（A应用暴露数据）<br> 一个程序可以通过实现一个ContentProvider的抽象接口将自己的数据暴露出去<br> 外界根本看不到，也不用看到这个应用暴露的数据在应用当中是如何存储的，是用数据库存储还是用文件存储，还是通过网上获得，这些一切都不重要，重要的是外界可以通过这一套标准及统一的接口和程序里的数据打交道，可以读取程序的数据，也可以修改程序的数据。<br>    2、ContentResolver：（操作A应用所暴露的数据）<br>外界的程序通过ContentResolver接口可以访问ContentProvider提供的数据<br>ContentResolver 可以理解成是HttpClient的作用。<br>    3、 Uri：Uri是ContentResolver和ContentProvider进行数据交换的标识。<br>每个ContentProvider提供公共的URI来唯一标识其数据集。管理多个数据集的（多个表）的 ContentProvider 为每个数据集提供了单独的URI。<br>比如:content://com.example.app.provider/table1/…: (类比:<a href="http://www.sina.com.cn/sports/nba/" target="_blank" rel="external">http://www.sina.com.cn/sports/nba/</a>….)<br>Uri 的标准前缀：以“content://”作为前缀，这个是标准的前缀，表示该数据由 ContentProvider 管理。<br>Uri 的authority部分：该部分是完整的类名。（使用小写形式保证他的唯一性）。<br>Uri 的path部分（资源部分、数据部分）： 用于决定哪类数据被请求(一般写的就是表的名字)。<br>被请求的特定记录的id值。如果请求不仅限于某个单条数据，该部分及其前面的斜线应该删除。<br>为了将一个字符串转换成Uri，Android中提供了Uri的parse()静态方法来实现。</p>
+<p>【备注】URI、URL、URN的区别：<br>首先，URI，是uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。<br>URL是uniform resource locator，统一资源定位器，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何locate这个资源。<br>URN，uniform resource name，统一资源命名，是通过名字来标识资源，比如mailto:java-net@java.sun.com。<br>          也就是说，URI是以一种抽象的，高层次概念定义统一资源标识，而URL和URN则是具体的资源标识的方式。URL和URN都是一种URI。<br>     总结一下：URL是一种具体的URI，它不仅唯一标识资源，而且还提供了定位该资源的信息。URI是一种语义上的抽象概念，可以是绝对的，也可以是相对的，而URL则必须提供足够的信息来定位，所以，是绝对的。</p>
+<p>（四）、系统内置的预定义ContentProvider：<br>    1、Contacts：获取、修改、保存联系人的信息<br>    2、SMS：短信<br>    3、CallLog ：查看或更新通话记录<br>    4、MediaStore：访问声音、视频、图片等多媒体文件<br>    5、Browser：读取或修改浏览历史、网络搜索、书签<br>    6、Setting：查看和获取蓝牙设置、铃声设置等设备首选项</p>
+<p>二、使用ContentResolver使用(系统提供的ContentProvider全部都定义好了)</p>
+<p>（一）、 使用ContentResolver 操作数据的步骤：<br>调用Context的getContentResolver()方法获得ContentResolver 对象；<br>调用使用ContentResolver 的insert()、delete()、update()、query()方法操作数据。<br>Uri insert(Uri uri, ContentValues values)<br>int delete(Uri uri, String where, String[] whereArgs)<br>Cursor query(Uri uri, String[] projection, String where, String[] whereArgs, String sortOrder)<br>int update(Uri uri, ContentValues values, String where, String[] whereArgs)<br>参数解释：<br>         String   where：表示带有占位符的where子句组成的字符串；<br>         String[]   whereArgs：表示替换where参数中占位符(?)后的数据组成的字符串数组；<br>         String   sortOrder：表示select语句中的order by子句组成的字符串；<br>         String[]   projection：表示select语句中需要查询返回的列。<br>         ContentValues values：是由数据库中表字段和往该字段中放置的数据所组成的键值对对象。<br>        【备注】以上四个方法的参数分别是2、3、4、5个。<br>      注意:使用CursorAdapter的数据源cursor必须要有_id的字段</p>
+<p>（二）、关于通话记录的数据操作<br>使用的Uri：content://call_log/calls<br>表中对应常用的字段的列名：<br>_id 主键<br>number 电话号码<br>name 联系人(如果没有这样的联系人信息，返回就是null)<br>type:通话类型 (1、来电记录；2、呼出记录；3、未接电话)<br>date 通话时间,接/未接电话的时间(年月日)(毫秒)<br>duration 通话时长(秒)<br>           【备注】权限申请:android.permission.READ_CALL_LOG|android.permission.WRITE_CALL_LOG</p>
+<p>（三）、关于短信的数据操作  (数据库路径： /data/data/com.android.providers.telephony/databases/mmssms.db)<br>    1、常用使用的Uri：<br>        1) content://sms/      （操作所有短信）<br>        2) content://sms/inbox  （收件箱）<br>        3) content://sms/sent   （已发送）<br>        4) content://sms/draft  （草稿）<br>        5) content://sms/outbox （发件箱）<br>        6) content://sms/failed （发送失败）<br>        7) content://sms/queued （待发送列表）<br>    2、表中对应常用的字段：<br>_id 主键<br>thread_id  序号，如果是同一个发件人，这里记录的thread_id一定以是一样的<br>address    发件人手机号码<br>person     联系人列表里的序号，null代表陌生人<br>date        日期(毫秒)<br>protocol   协议–(0.SMS_RPOTO, 1.MMS_PROTO)<br>read       是否阅读 (0未读, 1已读 )<br>status     接受状态 (-1接收，0完成, 64等待, 128失败)<br>type       (0所有;1收件箱 ;2已发送;3草稿;4发件箱;5发送失败;6待发送列表)<br>body       短信内容<br>service_center     短信服务中心号码编号<br>    3、sms对应的视图表threads常用字段意思     通过 (* from threads –)进行连接||扩展内容<br> _id            等于sms中的thread_id<br>message_count  短信的数量<br>snippet        最新一条短信的内容<br>date           最新一条短信对应的时间<br>    【备注】权限申请<br>      <uses-permission android:name="android.permission.READ_SMS"><br>      <uses-permission android:name="android.permission.WRITE_SMS"> </uses-permission></uses-permission></p>
+<p>（四）、关于联系人的数据操作(数据库路径:/data/data/com.android.providers.contacts/databases/contacts2.db)</p>
+<image src="http://7xs09t.com1.z0.glb.clouddn.com/contentprovider">
+
+<pre><code>  从上图可知:总共有三张数据表(contact, row_contact , data)
+  官方文档对三张表的解释:
+1)ContactsContract.Contacts table
+    Rows representing different people, based on aggregations of raw contact rows.
+2)ContactsContract.RawContacts table
+    Rows containing a summary of a person&apos;s data, specific to a user account and type.
+3)ContactsContract.Data table
+    Rows containing the details for raw contact, such as email addresses or phone numbers.
+</code></pre><p>   1、常用使用的Uri：<br>        a) 联系人的Uri==&gt;      content://com.android.contacts/contacts 和 content://com.android.contacts/raw_contacts 和content://com.android.contacts/data<br>        b )电话号码的Uri==&gt;  content://com.android.contacts/data/phones<br>        c) EMAIL的URI==&gt;     content://com.android.contacts/data/emails</p>
+<pre><code>不过为了方便记忆，系统中提供了以下常量来替代以上的Uri字符串。(系统直接提供的Uri)
+</code></pre><p>Uri CONTACTS_URI = ContactsContract.Contacts.CONTENT_URI;  –&gt; content://com.android.contacts/contacts<br>Uri PHONE_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI; –&gt; content://com.android.contacts/data/phones<br>Uri EMAIL_URI = ContactsContract.CommonDataKinds.Email.CONTENT_URI;  –&gt; content://com.android.contacts/data/emails</p>
+<pre><code>2、 data表中对应常用的字段：
+    a) raw_contact_id ：关联raw_contacts表的主键
+    b) data1: 存放数据,包括(联系人、电话号码、Email)
+    c) mimetype：配合data1使用(通过不同的类型区分是联系人，电话号码，Email)
+</code></pre><p>  【备注】权限申请<br>         <uses-permission android:name="android.permission.READ_CONTACTS"><br>         <uses-permission android:name="android.permission.WRITE_CONTACTS"> </uses-permission></uses-permission></p>
+<p>（五）、示例代码1——查看通讯录中的联系人姓名、id、电话、Email等信息：<br>    // 查询联系人<br>    public static List<map<string,object>&gt; queryContacts(ContentResolver resolver){<br>    List<map<string, object="">&gt; list = new ArrayList<map<string, object="">&gt;();<br>    Cursor cursorRawContacts;<br>    Cursor cursorData;<br>    //查找出raw_contacts的所有主键<br>    cursorRawContacts = resolver.query(<br>            Uri.parse(URL_RAW_CONTACTS),<br>            new String[]{“_id”}, null, null, null);<br>    // 默认在开始位置<br>    while (cursorRawContacts.moveToNext()) {<br>        //将_id加入到Map中<br>        Map<string, object=""> map = new HashMap<string, object="">();<br>        int _id = cursorRawContacts.getInt(cursorRawContacts<br>                .getColumnIndex(“_id”));<br>        map.put(“_id”, _id);<br>        //根据raw_contacts找到指定的data<br>        cursorData = resolver.query(<br>                Uri.parse(URL_DATA),<br>                new String[]{“data1”,”mimetype”},<br>                “raw_contact_id = ?”,<br>                new String[]{_id +””}, null);<br>        //从cursorData中获取联系人，电话号码，email<br>        while (cursorData.moveToNext()) {<br>            String data1 = cursorData.getString(cursorData.getColumnIndex(“data1”));<br>            String mimetype = cursorData.getString(cursorData.getColumnIndex(“mimetype”));<br>            if(mimetype.equals(“vnd.android.cursor.item/name”)){<br>                       map.put(“name”, data1);<br>            }else if(mimetype.equals(“vnd.android.cursor.item/phone_v2”)){<br>                // 可能有多个电话号码<br>                if (!map.containsKey(“phone”)) {<br>                    map.put(“phone”, data1);<br>                    } else {<br>                        String phone = (String) map.get(“phone”);<br>                        // 定义拼接的规则<br>                        map.put(“phone”, phone + “&amp;&amp;” + data1);<br>                }<br>            }else if(mimetype.equals(“vnd.android.cursor.item/email_v2”)){<br>                    // 可能有多个Email<br>                    if (!map.containsKey(“email”)) {<br>                        map.put(“email”, data1);<br>                    } else {<br>                        String email = (String) map.get(“email”);<br>                        // 定义拼接的规则<br>                        map.put(“email”, email + “&amp;&amp;” + data1);<br>                    }<br>                }<br>            }<br>            list.add(map);<br>        }<br>        return list;<br>}</string,></string,></map<string,></map<string,></map<string,object></p>
+<p>（六）、示例代码2——添加联系人信息：<br>     //插入联系人信息<br>    public static void insertContacts(ContentResolver resolver , Map<string,object> data){<br>        //先插入一条空的数据<br>        ContentValues values = new ContentValues();<br>        //获取插入返回的uri<br>        Uri uriInsert = resolver.insert(Uri.parse(URL_RAW_CONTACTS), values);<br>        //截取uri的最后位的数字，该数字表示raw_contact_id<br>        long raw_contact_id = ContentUris.parseId(uriInsert);<br>        //往data表中插入名字<br>        values.clear();<br>        values.put(“raw_contact_id”, raw_contact_id);<br>        values.put(“mimetype”, “vnd.android.cursor.item/name”);<br>        values.put(“data1”, (String) data.get(“name”));<br>        values.put(“data2”, (String) data.get(“name”));<br>        resolver.insert(Uri.parse(URL_DATA), values);<br>        // 往data表中插入电话号码<br>        values.clear();<br>        values.put(“raw_contact_id”, raw_contact_id);<br>        values.put(“mimetype”, “vnd.android.cursor.item/phone_v2”);<br>        values.put(“data1”, (String) data.get(“phone”));<br>        values.put(“data2”, Phone.TYPE_MOBILE);<br>        resolver.insert(Uri.parse(URL_DATA), values);<br>        // 往data表中插入电话号码<br>        values.clear();<br>        values.put(“raw_contact_id”, raw_contact_id);<br>        values.put(“mimetype”, “vnd.android.cursor.item/email_v2”);<br>        values.put(“data1”, (String) data.get(“email”));<br>        values.put(“data2”, Email.TYPE_HOME);<br>        resolver.insert(Uri.parse(URL_DATA), values);<br>    }</string,object></p>
+<p>（七）、示例代码3——删除,修改联系人信息：<br>        // 删除联系人(根据raw_contact的_id)<br>    public static void deleteContacts(ContentResolver resolver, int _id) {<br>        resolver.delete(Uri.parse(URL_RAW_CONTACTS), “_id = ?”,<br>                new String[] { _id + “” });<br>    }<br>        //更新联系人(根据row_contact的_id名字的替换)<br>    public static void updateContacts(ContentResolver resolver, int _id ,String newName){<br>        ContentValues values = new ContentValues();<br>        // 更新raw_contacts表中的4列字段(名字和排序)<br>        values.put(“display_name”, newName);<br>        values.put(“display_name_alt”, newName);<br>        values.put(“sort_key”, newName);<br>        values.put(“sort_key_alt”, newName);<br>        resolver.update(Uri.parse(URL_RAW_CONTACTS), values, “_id = ?”, new String[] { _id + “” });<br>        // 更新data表中的2列字段<br>        values.clear();<br>        values.put(“data1”, newName);<br>        values.put(“data2”, newName);<br>        resolver.update(Uri.parse(URL_DATA), values,<br>                “raw_contact_id = ? and mimeType = ?”, new String[] { _id + “”, “vnd.android.cursor.item/name” });<br>    }</p>
+<p>（八）、Android为多媒体提供的ContentProvider的Uri如下：</p>
+<p>MediaStore.Audio.Media.EXTERNAL_CONTENT_URI        存储在SD卡上的音频文件<br>MediaStore.Video.Media.EXTERNAL_CONTENT_URI        存储在 SD卡上的视频<br>MediaStore.Images.Media.EXTERNAL_CONTENT_URI       存储在 SD卡上的图片文件内容<br>MediaStore.Audio.Media.INTERNAL_CONTENT_URI          手机内部存储器上的音频文件<br>MediaStore.Video.Media.INTERNAL_CONTENT_URI        手机内部存储器上的视频<br>MediaStore.Images.Media.INTERNAL_CONTENT_URI       手机内部存储器上的图片<br>    【数据库中主要字段的列名】</p>
+<p>多媒体文件名称字段：Media.DISPLAY_NAME<br>详细描述字段：Media.DESCRIPTION<br>多媒体文件保存路径的字段：Media.DATA (/storage/mnt/icon.png)</p>
+<p>五、当日作业：<br>1、利用ContentResolver+AutoCompleteTextView实现自动补全联系人姓名<br>2、利用ContentResolver制作管理SDCard上的多媒体文件管理器（可以显示图片，音频）<br>      要求：左侧Fragment动态改变，右侧显示的内容动态变化（图片要求真实图片，音频视频不要求这是图片），文件名字显示必须要正确</p>
+<p>// 手动更新媒体库?<br>private void updateGallery(String filename)//filename是我们的文件全名，包括后缀哦<br> {<br>  MediaScannerConnection.scanFile(this,<br>            new String[] { filename }, null,<br>            new MediaScannerConnection.OnScanCompletedListener() {<br>        public void onScanCompleted(String path, Uri uri) {<br>            Log.i(“ExternalStorage”, “Scanned “ + path + “:”);<br>            Log.i(“ExternalStorage”, “-&gt; uri=” + uri);<br>        }<br>   });<br> }</p>
+</image>
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/05/16/Activity/" itemprop="url">
                   Activity详解
                 </a>
@@ -282,6 +411,106 @@
 <p><strong>2、异常情况下保存临时数据的方法：</strong><br>在onSaveInstanceState()方法中保存数据<br>//读取数据的方法<br>方法1:onRestoreInstanceState()，该方法执行在onStart()方法之后<br>方法2:在onCreate方法中的入参，就是保存的数据，直接从中取出数据<br>注意：取出数据之前，一定要判断是否为空。</p>
 <p><strong>3、横竖屏切换的问题：</strong><br>竖屏—&gt;横屏：先杀死一个Activity，再创建一个Activity<br>横屏—&gt;竖屏：先杀死一个Activity，再创建一个Activity<br>            再杀死一个Activity，再创建一个Activity<br>        原因：android的键盘导致的<br>可以设置清单文件中：<br>android:configChanges=”keyboardHidden|orientation|screenSize”<br>来保证横竖屏切换的时候，不改变Activity的生命周期<br>当横竖屏切换的时候，会触发：<br>public void onConfigurationChanged(Configuration newConfig);<br>横竖屏切换的时候可以在这个方法中做一些任务</p>
 
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/16/BroadCastReceiver/" itemprop="url">
+                  BroadCastReceiver详解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-16T22:51:20+08:00" content="2016-05-16">
+              2016-05-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>一、BroadCastReceiver(广播接收者)：</strong><br>（一）、广播传播机制：<br>        广播接收器，也被称为全局事件，或系统事件。<br>当Android系统中任何程序有动作时，如果想通知其他程序，采用广播的方式进行传播是非常有效的。广播从理论上说，可以将一个动作传播给任意多个程序（当然，广播接收器的数量会收到系统限制）。<br>        在Android中，有一些操作完成以后，会发送广播，比如说发出一条短信，或打出一个电话，如果某个程序接收了这个广播，就会做相应的处理。这个广播跟我们传统意义中的电台广播有些相似之处。之所以叫做广播，就是因为它只负责“说”而不管你“听不听”，也就是不管你接收方如何处理。另外，广播可以被不只一个应用程序所接收，当然也可能不被任何应用程序所接收。<br>广播机制最大的特点就是发送方并不关心接收方是否接到数据，也不关心接收方是如何处理数据的。<br>Android中广播的是操作系统中产生的各种各样的事件。例如，收到一条短信就会产生一个收到短信息的事件。而Android操作系统一旦内部产生了这些事件，就会向所有的广播接收器对象来广播这些事件。</p>
+<p>（二）、广播机制的三要素：<br>    Android广播机制包含三个基本要素：</p>
+<pre><code>1. 广播(Broadcast) - 用于发送广播；
+2. 广播接收器(BroadcastReceiver) - 用于接收广播；
+3. 意图内容(Intent)-用于保存广播相关信息的媒介。
+Broadcast是一种广泛运用的在应用程序之间传输信息的机制。
+而BroadcastReceiver是对发送出来的Broadcast进行过滤接受并响应的一类组件。
+</code></pre>
           
         
       
@@ -723,7 +952,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

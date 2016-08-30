@@ -1,0 +1,564 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="一、ContentProvider简介：（一）、引入：         数据库在Android当中是私有的，不能将数据库设为WORLD_READABLE,每个数据库都只能创建它的包访问。这意味着只有创建这个数据库的应用程序才可访问它。也就是说不能跨越进程和包的边界，直接访问别的应用程序的数据库。那么如何在应用程序间交换数据呢？ 如果需要在进程间传递数据，可以使用ContentProvider来实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ContentProvider详解">
+<meta property="og:url" content="http://yoursite.com/2016/05/25/ContentProvider/index.html">
+<meta property="og:site_name" content="Rex的学习空间">
+<meta property="og:description" content="一、ContentProvider简介：（一）、引入：         数据库在Android当中是私有的，不能将数据库设为WORLD_READABLE,每个数据库都只能创建它的包访问。这意味着只有创建这个数据库的应用程序才可访问它。也就是说不能跨越进程和包的边界，直接访问别的应用程序的数据库。那么如何在应用程序间交换数据呢？ 如果需要在进程间传递数据，可以使用ContentProvider来实现">
+<meta property="og:updated_time" content="2016-06-08T01:18:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ContentProvider详解">
+<meta name="twitter:description" content="一、ContentProvider简介：（一）、引入：         数据库在Android当中是私有的，不能将数据库设为WORLD_READABLE,每个数据库都只能创建它的包访问。这意味着只有创建这个数据库的应用程序才可访问它。也就是说不能跨越进程和包的边界，直接访问别的应用程序的数据库。那么如何在应用程序间交换数据呢？ 如果需要在进程间传递数据，可以使用ContentProvider来实现">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> ContentProvider详解 | Rex的学习空间 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Rex的学习空间</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">梦想者空间</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ContentProvider详解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-25T18:16:50+08:00" content="2016-05-25">
+              2016-05-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一、ContentProvider简介：<br>（一）、引入：<br>         数据库在Android当中是私有的，不能将数据库设为WORLD_READABLE,每个数据库都只能创建它的包访问。这意味着只有创建这个数据库的应用程序才可访问它。也就是说不能跨越进程和包的边界，直接访问别的应用程序的数据库。那么如何在应用程序间交换数据呢？ 如果需要在进程间传递数据，可以使用ContentProvider来实现。</p>
+<p>（二）、ContentProvider的功能和意义：<br>        为了在应用程序之间交换数据，Android提供了ContentProvider，ContentProvider是不同应用程序之间进行数据交换的标准API。当一个应用程序需要把自己的数据暴露给其他应用程序使用时，该应用程序可以通过提供ContentProvider来实现；而其他应用程序需要使用这些数据时，可以通过ContentResolver来操作ContentProvider暴露的数据。<br>        一旦某个应用程序通过ContentProvider暴露了自己的数据操作接口，那么不管该应用程序是否启动，其他应用程序都可以通过该接口来操作被暴露的内部数据，包括增加数据、删除数据、修改数据、查询数据等。<br>        虽然大部分使用ContentProvider操作的数据都来自于数据库，但是也可以来自于文件、SharedPreferences、XML或网络等其他存储方式。</p>
+<p>（三）、核心类：<br>    1、ContentProvider：（A应用暴露数据）<br> 一个程序可以通过实现一个ContentProvider的抽象接口将自己的数据暴露出去<br> 外界根本看不到，也不用看到这个应用暴露的数据在应用当中是如何存储的，是用数据库存储还是用文件存储，还是通过网上获得，这些一切都不重要，重要的是外界可以通过这一套标准及统一的接口和程序里的数据打交道，可以读取程序的数据，也可以修改程序的数据。<br>    2、ContentResolver：（操作A应用所暴露的数据）<br>外界的程序通过ContentResolver接口可以访问ContentProvider提供的数据<br>ContentResolver 可以理解成是HttpClient的作用。<br>    3、 Uri：Uri是ContentResolver和ContentProvider进行数据交换的标识。<br>每个ContentProvider提供公共的URI来唯一标识其数据集。管理多个数据集的（多个表）的 ContentProvider 为每个数据集提供了单独的URI。<br>比如:content://com.example.app.provider/table1/…: (类比:<a href="http://www.sina.com.cn/sports/nba/" target="_blank" rel="external">http://www.sina.com.cn/sports/nba/</a>….)<br>Uri 的标准前缀：以“content://”作为前缀，这个是标准的前缀，表示该数据由 ContentProvider 管理。<br>Uri 的authority部分：该部分是完整的类名。（使用小写形式保证他的唯一性）。<br>Uri 的path部分（资源部分、数据部分）： 用于决定哪类数据被请求(一般写的就是表的名字)。<br>被请求的特定记录的id值。如果请求不仅限于某个单条数据，该部分及其前面的斜线应该删除。<br>为了将一个字符串转换成Uri，Android中提供了Uri的parse()静态方法来实现。</p>
+<p>【备注】URI、URL、URN的区别：<br>首先，URI，是uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。<br>URL是uniform resource locator，统一资源定位器，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何locate这个资源。<br>URN，uniform resource name，统一资源命名，是通过名字来标识资源，比如mailto:java-net@java.sun.com。<br>          也就是说，URI是以一种抽象的，高层次概念定义统一资源标识，而URL和URN则是具体的资源标识的方式。URL和URN都是一种URI。<br>     总结一下：URL是一种具体的URI，它不仅唯一标识资源，而且还提供了定位该资源的信息。URI是一种语义上的抽象概念，可以是绝对的，也可以是相对的，而URL则必须提供足够的信息来定位，所以，是绝对的。</p>
+<p>（四）、系统内置的预定义ContentProvider：<br>    1、Contacts：获取、修改、保存联系人的信息<br>    2、SMS：短信<br>    3、CallLog ：查看或更新通话记录<br>    4、MediaStore：访问声音、视频、图片等多媒体文件<br>    5、Browser：读取或修改浏览历史、网络搜索、书签<br>    6、Setting：查看和获取蓝牙设置、铃声设置等设备首选项</p>
+<p>二、使用ContentResolver使用(系统提供的ContentProvider全部都定义好了)</p>
+<p>（一）、 使用ContentResolver 操作数据的步骤：<br>调用Context的getContentResolver()方法获得ContentResolver 对象；<br>调用使用ContentResolver 的insert()、delete()、update()、query()方法操作数据。<br>Uri insert(Uri uri, ContentValues values)<br>int delete(Uri uri, String where, String[] whereArgs)<br>Cursor query(Uri uri, String[] projection, String where, String[] whereArgs, String sortOrder)<br>int update(Uri uri, ContentValues values, String where, String[] whereArgs)<br>参数解释：<br>         String   where：表示带有占位符的where子句组成的字符串；<br>         String[]   whereArgs：表示替换where参数中占位符(?)后的数据组成的字符串数组；<br>         String   sortOrder：表示select语句中的order by子句组成的字符串；<br>         String[]   projection：表示select语句中需要查询返回的列。<br>         ContentValues values：是由数据库中表字段和往该字段中放置的数据所组成的键值对对象。<br>        【备注】以上四个方法的参数分别是2、3、4、5个。<br>      注意:使用CursorAdapter的数据源cursor必须要有_id的字段</p>
+<p>（二）、关于通话记录的数据操作<br>使用的Uri：content://call_log/calls<br>表中对应常用的字段的列名：<br>_id 主键<br>number 电话号码<br>name 联系人(如果没有这样的联系人信息，返回就是null)<br>type:通话类型 (1、来电记录；2、呼出记录；3、未接电话)<br>date 通话时间,接/未接电话的时间(年月日)(毫秒)<br>duration 通话时长(秒)<br>           【备注】权限申请:android.permission.READ_CALL_LOG|android.permission.WRITE_CALL_LOG</p>
+<p>（三）、关于短信的数据操作  (数据库路径： /data/data/com.android.providers.telephony/databases/mmssms.db)<br>    1、常用使用的Uri：<br>        1) content://sms/      （操作所有短信）<br>        2) content://sms/inbox  （收件箱）<br>        3) content://sms/sent   （已发送）<br>        4) content://sms/draft  （草稿）<br>        5) content://sms/outbox （发件箱）<br>        6) content://sms/failed （发送失败）<br>        7) content://sms/queued （待发送列表）<br>    2、表中对应常用的字段：<br>_id 主键<br>thread_id  序号，如果是同一个发件人，这里记录的thread_id一定以是一样的<br>address    发件人手机号码<br>person     联系人列表里的序号，null代表陌生人<br>date        日期(毫秒)<br>protocol   协议–(0.SMS_RPOTO, 1.MMS_PROTO)<br>read       是否阅读 (0未读, 1已读 )<br>status     接受状态 (-1接收，0完成, 64等待, 128失败)<br>type       (0所有;1收件箱 ;2已发送;3草稿;4发件箱;5发送失败;6待发送列表)<br>body       短信内容<br>service_center     短信服务中心号码编号<br>    3、sms对应的视图表threads常用字段意思     通过 (* from threads –)进行连接||扩展内容<br> _id            等于sms中的thread_id<br>message_count  短信的数量<br>snippet        最新一条短信的内容<br>date           最新一条短信对应的时间<br>    【备注】权限申请<br>      <uses-permission android:name="android.permission.READ_SMS"><br>      <uses-permission android:name="android.permission.WRITE_SMS"> </uses-permission></uses-permission></p>
+<p>（四）、关于联系人的数据操作(数据库路径:/data/data/com.android.providers.contacts/databases/contacts2.db)</p>
+<image src="http://7xs09t.com1.z0.glb.clouddn.com/contentprovider">
+
+<pre><code>  从上图可知:总共有三张数据表(contact, row_contact , data)
+  官方文档对三张表的解释:
+1)ContactsContract.Contacts table
+    Rows representing different people, based on aggregations of raw contact rows.
+2)ContactsContract.RawContacts table
+    Rows containing a summary of a person&apos;s data, specific to a user account and type.
+3)ContactsContract.Data table
+    Rows containing the details for raw contact, such as email addresses or phone numbers.
+</code></pre><p>   1、常用使用的Uri：<br>        a) 联系人的Uri==&gt;      content://com.android.contacts/contacts 和 content://com.android.contacts/raw_contacts 和content://com.android.contacts/data<br>        b )电话号码的Uri==&gt;  content://com.android.contacts/data/phones<br>        c) EMAIL的URI==&gt;     content://com.android.contacts/data/emails</p>
+<pre><code>不过为了方便记忆，系统中提供了以下常量来替代以上的Uri字符串。(系统直接提供的Uri)
+</code></pre><p>Uri CONTACTS_URI = ContactsContract.Contacts.CONTENT_URI;  –&gt; content://com.android.contacts/contacts<br>Uri PHONE_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI; –&gt; content://com.android.contacts/data/phones<br>Uri EMAIL_URI = ContactsContract.CommonDataKinds.Email.CONTENT_URI;  –&gt; content://com.android.contacts/data/emails</p>
+<pre><code>2、 data表中对应常用的字段：
+    a) raw_contact_id ：关联raw_contacts表的主键
+    b) data1: 存放数据,包括(联系人、电话号码、Email)
+    c) mimetype：配合data1使用(通过不同的类型区分是联系人，电话号码，Email)
+</code></pre><p>  【备注】权限申请<br>         <uses-permission android:name="android.permission.READ_CONTACTS"><br>         <uses-permission android:name="android.permission.WRITE_CONTACTS"> </uses-permission></uses-permission></p>
+<p>（五）、示例代码1——查看通讯录中的联系人姓名、id、电话、Email等信息：<br>    // 查询联系人<br>    public static List<map<string,object>&gt; queryContacts(ContentResolver resolver){<br>    List<map<string, object="">&gt; list = new ArrayList<map<string, object="">&gt;();<br>    Cursor cursorRawContacts;<br>    Cursor cursorData;<br>    //查找出raw_contacts的所有主键<br>    cursorRawContacts = resolver.query(<br>            Uri.parse(URL_RAW_CONTACTS),<br>            new String[]{“_id”}, null, null, null);<br>    // 默认在开始位置<br>    while (cursorRawContacts.moveToNext()) {<br>        //将_id加入到Map中<br>        Map<string, object=""> map = new HashMap<string, object="">();<br>        int _id = cursorRawContacts.getInt(cursorRawContacts<br>                .getColumnIndex(“_id”));<br>        map.put(“_id”, _id);<br>        //根据raw_contacts找到指定的data<br>        cursorData = resolver.query(<br>                Uri.parse(URL_DATA),<br>                new String[]{“data1”,”mimetype”},<br>                “raw_contact_id = ?”,<br>                new String[]{_id +””}, null);<br>        //从cursorData中获取联系人，电话号码，email<br>        while (cursorData.moveToNext()) {<br>            String data1 = cursorData.getString(cursorData.getColumnIndex(“data1”));<br>            String mimetype = cursorData.getString(cursorData.getColumnIndex(“mimetype”));<br>            if(mimetype.equals(“vnd.android.cursor.item/name”)){<br>                       map.put(“name”, data1);<br>            }else if(mimetype.equals(“vnd.android.cursor.item/phone_v2”)){<br>                // 可能有多个电话号码<br>                if (!map.containsKey(“phone”)) {<br>                    map.put(“phone”, data1);<br>                    } else {<br>                        String phone = (String) map.get(“phone”);<br>                        // 定义拼接的规则<br>                        map.put(“phone”, phone + “&amp;&amp;” + data1);<br>                }<br>            }else if(mimetype.equals(“vnd.android.cursor.item/email_v2”)){<br>                    // 可能有多个Email<br>                    if (!map.containsKey(“email”)) {<br>                        map.put(“email”, data1);<br>                    } else {<br>                        String email = (String) map.get(“email”);<br>                        // 定义拼接的规则<br>                        map.put(“email”, email + “&amp;&amp;” + data1);<br>                    }<br>                }<br>            }<br>            list.add(map);<br>        }<br>        return list;<br>}</string,></string,></map<string,></map<string,></map<string,object></p>
+<p>（六）、示例代码2——添加联系人信息：<br>     //插入联系人信息<br>    public static void insertContacts(ContentResolver resolver , Map<string,object> data){<br>        //先插入一条空的数据<br>        ContentValues values = new ContentValues();<br>        //获取插入返回的uri<br>        Uri uriInsert = resolver.insert(Uri.parse(URL_RAW_CONTACTS), values);<br>        //截取uri的最后位的数字，该数字表示raw_contact_id<br>        long raw_contact_id = ContentUris.parseId(uriInsert);<br>        //往data表中插入名字<br>        values.clear();<br>        values.put(“raw_contact_id”, raw_contact_id);<br>        values.put(“mimetype”, “vnd.android.cursor.item/name”);<br>        values.put(“data1”, (String) data.get(“name”));<br>        values.put(“data2”, (String) data.get(“name”));<br>        resolver.insert(Uri.parse(URL_DATA), values);<br>        // 往data表中插入电话号码<br>        values.clear();<br>        values.put(“raw_contact_id”, raw_contact_id);<br>        values.put(“mimetype”, “vnd.android.cursor.item/phone_v2”);<br>        values.put(“data1”, (String) data.get(“phone”));<br>        values.put(“data2”, Phone.TYPE_MOBILE);<br>        resolver.insert(Uri.parse(URL_DATA), values);<br>        // 往data表中插入电话号码<br>        values.clear();<br>        values.put(“raw_contact_id”, raw_contact_id);<br>        values.put(“mimetype”, “vnd.android.cursor.item/email_v2”);<br>        values.put(“data1”, (String) data.get(“email”));<br>        values.put(“data2”, Email.TYPE_HOME);<br>        resolver.insert(Uri.parse(URL_DATA), values);<br>    }</string,object></p>
+<p>（七）、示例代码3——删除,修改联系人信息：<br>        // 删除联系人(根据raw_contact的_id)<br>    public static void deleteContacts(ContentResolver resolver, int _id) {<br>        resolver.delete(Uri.parse(URL_RAW_CONTACTS), “_id = ?”,<br>                new String[] { _id + “” });<br>    }<br>        //更新联系人(根据row_contact的_id名字的替换)<br>    public static void updateContacts(ContentResolver resolver, int _id ,String newName){<br>        ContentValues values = new ContentValues();<br>        // 更新raw_contacts表中的4列字段(名字和排序)<br>        values.put(“display_name”, newName);<br>        values.put(“display_name_alt”, newName);<br>        values.put(“sort_key”, newName);<br>        values.put(“sort_key_alt”, newName);<br>        resolver.update(Uri.parse(URL_RAW_CONTACTS), values, “_id = ?”, new String[] { _id + “” });<br>        // 更新data表中的2列字段<br>        values.clear();<br>        values.put(“data1”, newName);<br>        values.put(“data2”, newName);<br>        resolver.update(Uri.parse(URL_DATA), values,<br>                “raw_contact_id = ? and mimeType = ?”, new String[] { _id + “”, “vnd.android.cursor.item/name” });<br>    }</p>
+<p>（八）、Android为多媒体提供的ContentProvider的Uri如下：</p>
+<p>MediaStore.Audio.Media.EXTERNAL_CONTENT_URI        存储在SD卡上的音频文件<br>MediaStore.Video.Media.EXTERNAL_CONTENT_URI        存储在 SD卡上的视频<br>MediaStore.Images.Media.EXTERNAL_CONTENT_URI       存储在 SD卡上的图片文件内容<br>MediaStore.Audio.Media.INTERNAL_CONTENT_URI          手机内部存储器上的音频文件<br>MediaStore.Video.Media.INTERNAL_CONTENT_URI        手机内部存储器上的视频<br>MediaStore.Images.Media.INTERNAL_CONTENT_URI       手机内部存储器上的图片<br>    【数据库中主要字段的列名】</p>
+<p>多媒体文件名称字段：Media.DISPLAY_NAME<br>详细描述字段：Media.DESCRIPTION<br>多媒体文件保存路径的字段：Media.DATA (/storage/mnt/icon.png)</p>
+<p>五、当日作业：<br>1、利用ContentResolver+AutoCompleteTextView实现自动补全联系人姓名<br>2、利用ContentResolver制作管理SDCard上的多媒体文件管理器（可以显示图片，音频）<br>      要求：左侧Fragment动态改变，右侧显示的内容动态变化（图片要求真实图片，音频视频不要求这是图片），文件名字显示必须要正确</p>
+<p>// 手动更新媒体库?<br>private void updateGallery(String filename)//filename是我们的文件全名，包括后缀哦<br> {<br>  MediaScannerConnection.scanFile(this,<br>            new String[] { filename }, null,<br>            new MediaScannerConnection.OnScanCompletedListener() {<br>        public void onScanCompleted(String path, Uri uri) {<br>            Log.i(“ExternalStorage”, “Scanned “ + path + “:”);<br>            Log.i(“ExternalStorage”, “-&gt; uri=” + uri);<br>        }<br>   });<br> }</p>
+</image>
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/16/Activity/" rel="next" title="Activity详解">
+                <i class="fa fa-chevron-left"></i> Activity详解
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Rex" />
+          <p class="site-author-name" itemprop="name">Rex</p>
+          <p class="site-description motion-element" itemprop="description">不忘初心</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rex</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
